@@ -42,6 +42,7 @@
     htop
     onefetch                          # fetch utility for git repo
     wavemon                           # monitoring for wireless network devices
+    fastfetch
 
     ## Fun / screensaver
     asciiquarium-transparent

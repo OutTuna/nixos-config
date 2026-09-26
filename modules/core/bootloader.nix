@@ -2,13 +2,19 @@
 {
   boot = {
     loader = {
-      systemd-boot.enable = true;
+      systemd-boot.enable = false;
       efi.canTouchEfiVariables = true;
-      systemd-boot.configurationLimit = 10;
     };
 
     kernelPackages = pkgs.linuxPackages_latest;
     kernelModules = [ "hid-nintendo" ];
     supportedFilesystems = [ "ntfs" ];
+
+    lanzaboote = {
+      enable = true;
+      pkiBundle = "/var/lib/sbctl";
+    };
   };
+
+  environment.systemPackages = [ pkgs.sbctl ];
 }

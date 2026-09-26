@@ -26,14 +26,25 @@
       url = "github:Gerg-L/spicetify-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    superfile.url = "github:yorukot/superfile";
+    # superfile.url = "github:yorukot/superfile";
     zen-browser.url = "github:0xc000022070/zen-browser-flake/beta";
+
+    helium = {
+	url = "github:AlvaroParker/helium-nix";
+	inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    lanzaboote = {
+    url = "github:nix-community/lanzaboote/master";
+    inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
   outputs =
     { nixpkgs, self, ... }@inputs:
     let
-      username = "frostphoenix";
+      username = "zei";
       system = "x86_64-linux";
       pkgs = import nixpkgs {
         inherit system;
@@ -45,7 +56,10 @@
       nixosConfigurations = {
         desktop = nixpkgs.lib.nixosSystem {
           inherit system;
-          modules = [ ./hosts/desktop ];
+          modules = [ 
+	  	./hosts/desktop
+		inputs.lanzaboote.nixosModules.lanzaboote
+	  ];
           specialArgs = {
             host = "desktop";
             inherit self inputs username;

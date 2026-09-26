@@ -4,8 +4,8 @@
     "$mod" = "SUPER";
 
     input = {
-      kb_layout = "us,fr";
-      kb_options = "grp:alt_caps_toggle";
+      kb_layout = "us,ru";
+      kb_options = "grp:lalt_lshift_toggle";
 
       repeat_delay = 300;
       numlock_by_default = true;
@@ -13,6 +13,10 @@
       follow_mouse = 0;
       mouse_refocus = 0;
       float_switch_override_focus = 0;
+
+      force_no_accel = true;
+      sensitivity = 0;
+      accel_profile = "flat";
 
       touchpad = {
         disable_while_typing = false;

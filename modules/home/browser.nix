@@ -4,6 +4,10 @@
 
   programs.zen-browser = {
     enable = true;
-    setAsDefaultBrowser = true;
+    setAsDefaultBrowser = false;
   };
+
+  home.packages = [
+    inputs.helium.packages.${pkgs.system}.default
+  ];
 }

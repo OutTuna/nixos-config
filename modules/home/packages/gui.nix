@@ -10,6 +10,9 @@
     pavucontrol
     video-trimmer
     vlc
+    
+    telegram-desktop
+
 
     newsflash
 

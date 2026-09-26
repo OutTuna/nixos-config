@@ -1,9 +1,7 @@
-{ ... }:
+{ pkgs, ... }:
 {
   imports = [
-    ./hardware-configuration.nix
-    ./../../modules/core
+    ./hardware-configuration.nix      # Подключаем диски и железо
+    ./../../modules/core              # Подключаем основные модули FrostPhoenix
   ];
-
-  powerManagement.cpuFreqGovernor = "performance";
 }
