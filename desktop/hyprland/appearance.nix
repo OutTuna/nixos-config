@@ -1,0 +1,36 @@
+{ pkgs, ... }:
+
+let p = import ../theme/palette.nix;
+in
+{
+  wayland.windowManager.hyprland.settings = {
+    "exec-once" = [ "${pkgs.hyprland}/bin/hyprctl setcursor breeze_cursors 24" ];
+    general = {
+      gaps_in = 6;
+      gaps_out = 12;
+      border_size = 2;
+      "col.active_border" = "rgb(${p.green}) rgb(${p.red}) 45deg";
+      "col.inactive_border" = "rgba(00000000)";
+    };
+    misc.background_color = "rgb(${p.background})";
+    decoration = {
+      rounding = 0;
+      blur = {
+        enabled = true;
+        size = 3;
+        noise = 0;
+        passes = 2;
+        contrast = 1.4;
+        brightness = 1;
+        xray = true;
+      };
+      shadow = {
+        enabled = true;
+        range = 20;
+        render_power = 3;
+        offset = "0 2";
+        color = "rgba(00000055)";
+      };
+    };
+  };
+}
