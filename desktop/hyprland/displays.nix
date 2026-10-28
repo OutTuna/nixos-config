@@ -10,6 +10,10 @@
     ];
     workspace = [ "1, monitor:DP-1, default:true" ];
     cursor.default_monitor = "DP-1";
-    "exec-once" = lib.mkBefore [ "${pkgs.hyprland}/bin/hyprctl dispatch focusmonitor DP-1" ];
+    "exec-once" = lib.mkBefore [
+      "${pkgs.hyprland}/bin/hyprctl dispatch focusmonitor DP-1"
+      # Games using XWayland must see the 1440p display as the primary output.
+      "${pkgs.xorg.xrandr}/bin/xrandr --output DP-1 --primary"
+    ];
   };
 }
