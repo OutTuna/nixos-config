@@ -13,7 +13,7 @@ in {
   programs.waybar.settings.mainBar = {
     modules-right = lib.mkForce [
       "hyprland/language" "cpu" "custom/cpu-temp" "custom/gpu"
-      "memory" "pulseaudio" "network" "battery" "tray"
+      "memory" "pulseaudio" "network" "bluetooth" "battery" "tray"
     ];
     "custom/cpu-temp" = {
       exec = "${telemetry} cpu-temp";
@@ -24,6 +24,16 @@ in {
       exec = "${telemetry} gpu";
       return-type = "json";
       interval = 5;
+    };
+    bluetooth = {
+      format = " {status}";
+      format-connected = " {num_connections}";
+      format-disabled = " off";
+      format-off = " off";
+      tooltip-format = "Bluetooth: {status}";
+      tooltip-format-connected = "{device_enumerate}";
+      tooltip-format-enumerate-connected = "{device_alias}";
+      on-click = "${pkgs.blueman}/bin/blueman-manager";
     };
     clock.on-click = "${calendar}";
   };

@@ -11,7 +11,6 @@ in
     configType = "hyprlang";
     systemd.enable = false; # UWSM manages the session.
     settings = {
-      "exec-once" = [ "${pkgs.foot}/bin/foot" ];
       general = {
         layout = "dwindle";
         allow_tearing = false;

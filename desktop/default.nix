@@ -6,6 +6,8 @@
 
   programs.hyprland.enable = true;
   programs.hyprland.withUWSM = true;
+  hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
   # RTX 5070 (Blackwell) requires NVIDIA's open kernel module.
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.graphics.enable = true;
