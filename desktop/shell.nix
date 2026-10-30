@@ -26,7 +26,27 @@ let
       PY
     '';
   });
-  package = pkgs.noctalia-shell.override { noctalia-qs = quickshell; };
+  package = (pkgs.noctalia-shell.override { noctalia-qs = quickshell; }).overrideAttrs (old: {
+    postPatch = (old.postPatch or "") + ''
+      ${pkgs.python3}/bin/python3 - <<'PY'
+      from pathlib import Path
+      import re
+      # Qt 6.12 exposes Color as a built-in value type. Avoid shadowing our
+      # singleton with it in QML expressions.
+      for file in Path('.').rglob('*.qml'):
+          text = file.read_text()
+          text = re.sub(r'\bColor\.', 'NoctaliaColor.', text)
+          file.write_text(text)
+      Path('Commons/Color.qml').rename('Commons/NoctaliaColor.qml')
+      # All first-run choices are Nix-managed; never show the interactive wizard.
+      shell = Path('shell.qml')
+      text = shell.read_text()
+      needle = 'function showWizardOrChangelog() {'
+      assert text.count(needle) == 1
+      shell.write_text(text.replace(needle, needle + '\n    return; // Declarative Nix setup.\n'))
+      PY
+    '';
+  });
   settings = pkgs.writeText "noctalia-settings.json" (builtins.toJSON {
     settingsVersion = 59; # Schema of the locked noctalia-shell 4.7.7.
     bar = {
@@ -66,6 +86,7 @@ in lib.mkIf useNoctalia {
   systemd.user.services.noctalia = {
     Unit = {
       Description = "Noctalia desktop shell (Nix-managed)";
+      Conflicts = [ "waybar-recovery.service" "noctalia-fixed-preview.service" ];
       ConditionEnvironment = "XDG_CURRENT_DESKTOP=Hyprland";
       PartOf = [ config.wayland.systemd.target ];
       After = [ config.wayland.systemd.target ];
