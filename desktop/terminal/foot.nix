@@ -14,7 +14,7 @@
         "Control+v Control+Cyrillic_em Control+Shift+v Control+Shift+Cyrillic_em XF86Paste";
       scrollback.lines = 10000;
       # Palette comes from Noctalia; keep terminal behavior in Nix.
-      colors-dark.alpha = 0.66;
+      colors-dark.alpha = 0.95;
     };
   };
 }
