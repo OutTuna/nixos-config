@@ -33,4 +33,12 @@ if [[ -f /home/zei/.config/noctalia/settings.json && ! -e /home/zei/.config/noct
   echo "Legacy Noctalia config/plugins preserved: $legacy"
 fi
 nixos-rebuild switch --flake /etc/nixos#nixos
+# Plain Hyprland may not have graphical-session.target active. exec-once will
+# handle future logins; explicitly start the new service for this live session.
+runtime="/run/user/$(id -u zei)"
+if [[ -S "$runtime/bus" ]]; then
+  runuser -u zei -- env XDG_RUNTIME_DIR="$runtime" \
+    DBUS_SESSION_BUS_ADDRESS="unix:path=$runtime/bus" \
+    systemctl --user start noctalia.service
+fi
 echo 'To restore Waybar: set useNoctalia = false in /etc/nixos/desktop/shell.nix and rebuild.'
