@@ -5,6 +5,10 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     # Keep upstream's dependency set: no Qt/Quickshell compatibility overrides.
     noctalia.url = "github:noctalia-dev/noctalia/v5.4.1";
+    millennium = {
+      url = "github:SteamClientHomebrew/Millennium?dir=packages/nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -15,13 +19,14 @@
     };
   };
 
-  outputs = { nixpkgs, home-manager, silentSDDM, noctalia, ... }: {
+  outputs = { nixpkgs, home-manager, silentSDDM, noctalia, millennium, ... }: {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
         ./configuration.nix
         home-manager.nixosModules.home-manager
         {
+          nixpkgs.overlays = [ millennium.overlays.default ];
           home-manager.sharedModules = [ noctalia.homeModules.default ];
           nix.settings = {
             extra-substituters = [ "https://noctalia.cachix.org" ];

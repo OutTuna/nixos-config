@@ -32,7 +32,10 @@
   ];
 
   # Installs Steam and enables its required 32-bit graphics and hardware rules.
-  programs.steam.enable = true;
+  programs.steam = {
+    enable = true;
+    package = pkgs.millennium-steam;
+  };
 
   programs.fish.enable = true;
   programs.nh = {
