@@ -82,6 +82,15 @@ let
 in lib.mkIf useNoctalia {
   programs.waybar.enable = lib.mkForce false;
   services.mako.enable = lib.mkForce false;
+  # Plain Hyprland does not start graphical-session.target (UWSM does).
+  # Import the compositor environment before starting the same managed service.
+  wayland.windowManager.hyprland.settings.exec-once = lib.mkAfter [
+    "${pkgs.writeShellScript "autostart-noctalia" ''
+      ${pkgs.systemd}/bin/systemctl --user import-environment \
+        WAYLAND_DISPLAY HYPRLAND_INSTANCE_SIGNATURE XDG_CURRENT_DESKTOP
+      ${pkgs.systemd}/bin/systemctl --user start noctalia.service
+    ''}"
+  ];
   home.packages = [ package ];
   systemd.user.services.noctalia = {
     Unit = {
