@@ -54,17 +54,33 @@ done
 # handle future logins; explicitly start the new service for this live session.
 runtime="/run/user/$(id -u zei)"
 if [[ -S "$runtime/bus" ]]; then
-  runuser -u zei -- env XDG_RUNTIME_DIR="$runtime" \
-    DBUS_SESSION_BUS_ADDRESS="unix:path=$runtime/bus" \
-    systemctl --user unset-environment QT_STYLE_OVERRIDE
-  runuser -u zei -- env XDG_RUNTIME_DIR="$runtime" \
-    DBUS_SESSION_BUS_ADDRESS="unix:path=$runtime/bus" \
-    systemctl --user start noctalia.service
-  runuser -u zei -- env XDG_RUNTIME_DIR="$runtime" \
-    DBUS_SESSION_BUS_ADDRESS="unix:path=$runtime/bus" \
-    /etc/profiles/per-user/zei/bin/noctalia msg config-set wallpaper.enabled true
-  runuser -u zei -- env XDG_RUNTIME_DIR="$runtime" \
-    DBUS_SESSION_BUS_ADDRESS="unix:path=$runtime/bus" \
-    /etc/profiles/per-user/zei/bin/noctalia msg templates-apply
+  user_env=(XDG_RUNTIME_DIR="$runtime" DBUS_SESSION_BUS_ADDRESS="unix:path=$runtime/bus")
+  # sudo/runuser may strip WAYLAND_DISPLAY. IPC uses it in the socket name,
+  # so recover the compositor environment instead of assuming wayland-0.
+  display=$(runuser -u zei -- env "${user_env[@]}" \
+    systemctl --user show-environment | sed -n 's/^WAYLAND_DISPLAY=//p')
+  as_user() { runuser -u zei -- env "${user_env[@]}" "$@"; }
+  as_user systemctl --user unset-environment QT_STYLE_OVERRIDE
+  if [[ -n "$display" ]]; then
+    user_env+=(WAYLAND_DISPLAY="$display")
+    as_user systemctl --user start noctalia.service
+    noctalia=/etc/profiles/per-user/zei/bin/noctalia
+    ready=false
+    for attempt in {1..40}; do
+      if as_user "$noctalia" msg status >/dev/null 2>&1; then
+        ready=true
+        break
+      fi
+      sleep 0.25
+    done
+    if [[ "$ready" != true ]]; then
+      echo 'System updated, but Noctalia IPC did not become ready. Check: journalctl --user -u noctalia' >&2
+      exit 1
+    fi
+    as_user "$noctalia" msg config-set wallpaper.enabled true
+    as_user "$noctalia" msg templates-apply
+  else
+    echo 'No active Wayland session found; Noctalia will start on the next Hyprland login.'
+  fi
 fi
 echo 'To restore Waybar: set useNoctalia = false in /etc/nixos/desktop/shell.nix and rebuild.'
