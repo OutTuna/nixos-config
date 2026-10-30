@@ -3,6 +3,8 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    # Keep upstream's dependency set: no Qt/Quickshell compatibility overrides.
+    noctalia.url = "github:noctalia-dev/noctalia/v5.4.1";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -13,12 +15,19 @@
     };
   };
 
-  outputs = { nixpkgs, home-manager, silentSDDM, ... }: {
+  outputs = { nixpkgs, home-manager, silentSDDM, noctalia, ... }: {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
         ./configuration.nix
         home-manager.nixosModules.home-manager
+        {
+          home-manager.sharedModules = [ noctalia.homeModules.default ];
+          nix.settings = {
+            extra-substituters = [ "https://noctalia.cachix.org" ];
+            extra-trusted-public-keys = [ "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=" ];
+          };
+        }
         silentSDDM.nixosModules.default
       ];
     };
