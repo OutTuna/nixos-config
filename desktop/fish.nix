@@ -14,6 +14,7 @@ let
     cfg = "sudo nvim /etc/nixos/configuration.nix";
     ncfg = "sudo nvim /etc/nixos/configuration.nix";
     fcfg = "sudo nvim /etc/nixos/flake.nix";
+    dcfg = "sudo nvim /etc/nixos/modules/drivers.nix";
     pcfg = "sudo nvim /etc/nixos/modules/programs.nix";
     ccfg = "sudo nvim /etc/nixos/modules/coding.nix";
     hcfg = "sudo nvim /etc/nixos/desktop/hyprland/default.nix";
@@ -28,7 +29,7 @@ let
     { title = "Terminal"; names = [ "c" "cls" "up" "fetch" ]; }
     { title = "Rebuild System (both use flakes; neither updates flake.lock)"; names = [ "upd" "updd" ]; }
     { title = "Docker (run Compose commands from your project directory)"; names = [ "dcu" "dcd" "dca" "dcr" ]; }
-    { title = "System Configs (Neovim only)"; names = [ "ncfg" "ccfg" "pcfg" "fcfg" ]; }
+    { title = "System Configs (Neovim only)"; names = [ "ncfg" "ccfg" "pcfg" "dcfg" "fcfg" ]; }
   ];
   help = lib.concatMapStrings (group: ''
     set_color --bold blue
