@@ -2,6 +2,31 @@
 let
   # Set to false and rebuild to restore Waybar + Mako.
   useNoctalia = true;
+  # Qt 6.12's opaque-pointer helper still queries completeness of forward
+  # declarations, caching false before moc sees the full QObject definition.
+  # Preserve opaque-pointer semantics without that premature query (QS only).
+  quickshell = pkgs.noctalia-qs.overrideAttrs (old: {
+    postPatch = (old.postPatch or "") + ''
+      ${pkgs.python3}/bin/python3 - <<'PY'
+      from pathlib import Path
+      import re
+      def opaque(m):
+          typ = m.group(1)
+          return m.group(0) + (
+              "\nnamespace QtPrivate { template<> inline constexpr bool "
+              f"PointerIsSuitableForMetaTypeHelper<{typ}> = true; }}\n"
+          )
+      total = 0
+      for header in Path("src").rglob("*.hpp"):
+          text, count = re.subn(r"Q_DECLARE_OPAQUE_POINTER\((qs::[\w:]+\*)\);", opaque, header.read_text())
+          if count:
+              header.write_text(text)
+              total += count
+      assert total == 6, f"Unexpected opaque pointer declarations: {total}"
+      PY
+    '';
+  });
+  package = pkgs.noctalia-shell.override { noctalia-qs = quickshell; };
   settings = pkgs.writeText "noctalia-settings.json" (builtins.toJSON {
     settingsVersion = 59; # Schema of the locked noctalia-shell 4.7.7.
     bar = {
@@ -32,12 +57,12 @@ let
     # GUI edits are temporary: Nix settings are restored on each service start.
     install -Dm600 ${settings} "$XDG_RUNTIME_DIR/noctalia/settings.json"
     export NOCTALIA_SETTINGS_FILE="$XDG_RUNTIME_DIR/noctalia/settings.json"
-    exec ${pkgs.noctalia-shell}/bin/noctalia-shell
+    exec ${package}/bin/noctalia-shell
   '';
 in lib.mkIf useNoctalia {
   programs.waybar.enable = lib.mkForce false;
   services.mako.enable = lib.mkForce false;
-  home.packages = [ pkgs.noctalia-shell ];
+  home.packages = [ package ];
   systemd.user.services.noctalia = {
     Unit = {
       Description = "Noctalia desktop shell (Nix-managed)";
