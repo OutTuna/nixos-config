@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   p = import ./theme/palette.nix;
@@ -32,11 +32,11 @@ in
   };
   services.hyprpolkitagent.enable = true;
   systemd.user.services = (lib.genAttrs
-    [ "waybar" "hypridle" "hyprpolkitagent" ]
+    ([ "hypridle" "hyprpolkitagent" ] ++ lib.optional config.programs.waybar.enable "waybar")
     (_: { Unit.ConditionEnvironment = lib.mkForce "XDG_CURRENT_DESKTOP=Hyprland"; })) // {
   # The condition-only unit above masks mako's packaged D-Bus unit, so provide
   # a complete service rather than an invalid unit containing only [Unit].
-  mako = {
+   mako = lib.mkIf config.services.mako.enable {
     Unit = {
       Description = "Mako notification daemon";
       ConditionEnvironment = "XDG_CURRENT_DESKTOP=Hyprland";

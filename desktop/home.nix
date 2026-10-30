@@ -9,6 +9,7 @@
     ./fish.nix
     ./browser.nix
     ./services.nix
+    ./shell.nix
   ];
 
   home.username = "zei";
