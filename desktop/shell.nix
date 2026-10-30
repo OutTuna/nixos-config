@@ -21,6 +21,11 @@ in lib.mkIf useNoctalia {
     enable = true;
     systemd.enable = true;
     settings = {
+      # Keep track titles out of the bar; playback stays available in the media panel.
+      bar.default.end = [
+        "tray" "notifications" "clipboard" "network" "bluetooth"
+        "volume" "brightness" "battery" "control-center" "session"
+      ];
       shell.font_family = "JetBrainsMono Nerd Font";
       shell.setup_wizard_enabled = false;
       shell.launch_apps_as_systemd_services = true;
