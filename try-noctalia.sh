@@ -16,7 +16,8 @@ stage=$(mktemp -d /tmp/opencode/noctalia-apply-XXXXXXXX)
 tar -xzf "$backup/nixos.tar.gz" -C "$stage"
 files=(flake.nix flake.lock configuration.nix modules/programs.nix
   desktop/home.nix desktop/services.nix desktop/shell.nix
-  desktop/theme/cursor.nix desktop/hyprland/default.nix desktop/hyprland/appearance.nix)
+  desktop/theme/cursor.nix desktop/terminal/foot.nix
+  desktop/hyprland/default.nix desktop/hyprland/appearance.nix)
 for file in "${files[@]}"; do
   install -Dm644 "$repo/$file" "$stage/$file"
 done
@@ -55,12 +56,15 @@ runtime="/run/user/$(id -u zei)"
 if [[ -S "$runtime/bus" ]]; then
   runuser -u zei -- env XDG_RUNTIME_DIR="$runtime" \
     DBUS_SESSION_BUS_ADDRESS="unix:path=$runtime/bus" \
-    systemctl --user unset-environment QT_STYLE_OVERRIDE QT_QPA_PLATFORMTHEME
+    systemctl --user unset-environment QT_STYLE_OVERRIDE
   runuser -u zei -- env XDG_RUNTIME_DIR="$runtime" \
     DBUS_SESSION_BUS_ADDRESS="unix:path=$runtime/bus" \
     systemctl --user start noctalia.service
   runuser -u zei -- env XDG_RUNTIME_DIR="$runtime" \
     DBUS_SESSION_BUS_ADDRESS="unix:path=$runtime/bus" \
     /etc/profiles/per-user/zei/bin/noctalia msg config-set wallpaper.enabled true
+  runuser -u zei -- env XDG_RUNTIME_DIR="$runtime" \
+    DBUS_SESSION_BUS_ADDRESS="unix:path=$runtime/bus" \
+    /etc/profiles/per-user/zei/bin/noctalia msg templates-apply
 fi
 echo 'To restore Waybar: set useNoctalia = false in /etc/nixos/desktop/shell.nix and rebuild.'

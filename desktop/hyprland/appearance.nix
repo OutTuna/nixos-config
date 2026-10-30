@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let p = import ../theme/palette.nix;
 in
@@ -9,8 +9,6 @@ in
       gaps_in = 6;
       gaps_out = 12;
       border_size = 2;
-      "col.active_border" = "rgb(${p.green}) rgb(${p.red}) 45deg";
-      "col.inactive_border" = "rgba(00000000)";
     };
     misc.background_color = "rgb(${p.background})";
     decoration = {
@@ -33,4 +31,8 @@ in
       };
     };
   };
+  # Appended after the declarative settings, so Noctalia owns border colors.
+  wayland.windowManager.hyprland.extraConfig = lib.mkAfter ''
+    source = ${config.xdg.configHome}/hypr/noctalia.conf
+  '';
 }

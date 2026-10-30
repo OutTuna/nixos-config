@@ -42,6 +42,29 @@ Hyprlock remain responsible for idle/suspend and locking.
 
 Noctalia autostarts both in plain Hyprland and in UWSM-managed sessions.
 
+## Theme ownership
+
+Nix owns the main Hyprland/Foot configs, keybindings, fonts, padding and window
+geometry. Noctalia owns only the generated palette files:
+
+- `~/.config/hypr/noctalia.conf`, sourced last by the Nix-generated Hyprland config;
+- `~/.config/foot/themes/noctalia`, included by the Nix-generated Foot config;
+- GTK 3/4 generated CSS and Qt5ct/Qt6ct color schemes.
+
+The five built-in templates (`hyprland`, `foot`, `gtk3`, `gtk4`, `qt`) are enabled
+in Nix. GTK uses adw-gtk3; Qt uses Qtct/Fusion with the generated palette, not
+Kvantum. Clean installs get writable fallback include files before first launch.
+Noctalia can regenerate them without editing Nix store symlinks. Keep these
+templates enabled while their includes are in the main config.
+
+Changing a Noctalia palette updates colors, not Hyprland's geometry. Rounding,
+gaps and keybindings are still configured in Nix. Restart Foot and Qt apps to
+pick up new colors; existing Foot windows do not reload their config live.
+
+The installation and integration are reproducible. For identical appearance on
+another machine, also curate the selected palette and GUI overrides into the Nix
+settings; an arbitrary later GUI choice is intentionally not pinned by Nix.
+
 ```sh
 noctalia msg settings-toggle
 noctalia msg panel-toggle control-center
