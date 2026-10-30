@@ -1,5 +1,7 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 {
+  # The community apply hook invokes jq, but Noctalia does not ship it.
+  home.packages = [ pkgs.jq ];
   # Keep a reproducible base, but let Noctalia merge logo/display colors into
   # the writable config.jsonc. A store symlink there would break its hook.
   xdg.configFile."fastfetch/base.json".text = builtins.toJSON {
