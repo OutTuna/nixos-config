@@ -2,7 +2,7 @@
 
 {
   imports = [
-    ./theme
+    ./theme/cursor.nix
     ./hyprland
     ./waybar
     ./terminal

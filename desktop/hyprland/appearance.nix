@@ -4,7 +4,7 @@ let p = import ../theme/palette.nix;
 in
 {
   wayland.windowManager.hyprland.settings = {
-    "exec-once" = [ "${pkgs.hyprland}/bin/hyprctl setcursor breeze_cursors 24" ];
+    "exec-once" = [ "${pkgs.hyprland}/bin/hyprctl setcursor Bibata-Modern-Ice 24" ];
     general = {
       gaps_in = 6;
       gaps_out = 12;

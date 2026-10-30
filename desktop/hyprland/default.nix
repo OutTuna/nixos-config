@@ -44,14 +44,14 @@ in
       };
       bind = [
         "SUPER, Return, exec, ${pkgs.foot}/bin/foot"
-        "SUPER, code:53, exec, ${pkgs.fuzzel}/bin/fuzzel"
-        "SUPER, Space, exec, ${pkgs.fuzzel}/bin/fuzzel"
+        "SUPER, code:53, exec, noctalia msg panel-toggle launcher"
+        "SUPER, Space, exec, noctalia msg panel-toggle launcher"
         "SUPER, code:25, killactive,"
         "SUPER, code:55, togglefloating,"
         "SUPER, code:44, layoutmsg, togglesplit"
         "SUPER, code:41, fullscreen, 0"
         "SUPER, code:56, exec, ${lib.getExe helium}"
-        "SUPER, code:26, exec, dolphin"
+        "SUPER, code:26, exec, thunar"
         "SUPER, code:28, exec, ${pkgs.telegram-desktop}/bin/Telegram"
         "SUPER CTRL, code:46, exec, ${pkgs.hyprlock}/bin/hyprlock"
         "SUPER SHIFT, Escape, exec, ${pkgs.uwsm}/bin/uwsm stop"

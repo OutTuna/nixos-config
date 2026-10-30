@@ -52,9 +52,16 @@
   # You can disable this if you're only using the Wayland session.
   services.xserver.enable = true;
 
-  # Enable the KDE Plasma Desktop Environment.
+  # Keep the login screen, but use Hyprland/Noctalia instead of Plasma.
   services.displayManager.sddm.enable = true;
-  services.desktopManager.plasma6.enable = true;
+  services.desktopManager.plasma6.enable = false;
+  services.gnome.gnome-keyring.enable = true;
+  programs.thunar.enable = true;
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    config.hyprland.default = [ "hyprland" "gtk" ];
+  };
 
   # Configure keymap in X11
   services.xserver.xkb = {

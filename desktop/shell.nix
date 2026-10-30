@@ -5,6 +5,16 @@ let
 in lib.mkIf useNoctalia {
   programs.waybar.enable = lib.mkForce false;
   services.mako.enable = lib.mkForce false;
+  programs.fuzzel.enable = lib.mkForce false;
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      "inode/directory" = [ "thunar.desktop" ];
+      "application/pdf" = [ "org.gnome.Papers.desktop" ];
+      "image/jpeg" = [ "org.gnome.Loupe.desktop" ];
+      "image/png" = [ "org.gnome.Loupe.desktop" ];
+    };
+  };
 
   # Official upstream module/package, pinned in flake.lock. No source patches.
   programs.noctalia = {
@@ -15,8 +25,8 @@ in lib.mkIf useNoctalia {
       shell.setup_wizard_enabled = false;
       shell.launch_apps_as_systemd_services = true;
       theme.mode = "dark";
-      # Keep the existing wallpaper and Hypridle during the version migration.
-      wallpaper.enabled = false;
+      wallpaper.enabled = true;
+      wallpaper.directory = "/home/zei/Pictures";
       idle.behavior.lock.enabled = false;
       idle.behavior.screen-off.enabled = false;
     };
@@ -33,6 +43,6 @@ in lib.mkIf useNoctalia {
   ];
   systemd.user.services.noctalia.Unit = {
     ConditionEnvironment = "XDG_CURRENT_DESKTOP=Hyprland";
-    Conflicts = [ "waybar-recovery.service" "noctalia-fixed-preview.service" ];
+    Conflicts = [ "waybar-recovery.service" "noctalia-fixed-preview.service" "mako.service" "gruvbox-wallpaper.service" ];
   };
 }

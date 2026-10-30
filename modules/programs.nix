@@ -8,9 +8,6 @@
     #system-stuff
     foot
     fastfetch
-    fuzzel
-    waybar
-    mako
     hyprlock
     hypridle
     hyprpolkitagent
@@ -19,9 +16,10 @@
     slurp
     brightnessctl
     pavucontrol
-    networkmanagerapplet
-    kdePackages.dolphin
-    kdePackages.kate
+    mousepad
+    papers
+    loupe
+    file-roller
 
     #default
     telegram-desktop

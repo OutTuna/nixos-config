@@ -29,7 +29,17 @@ base configuration. They are **not reset at login**. To reproduce a GUI-tuned
 layout, export/review the config and translate desired values back into the Nix
 settings. Do not publish raw exports: they may contain plugin credentials.
 
-Existing wallpaper, Hypridle, Hyprlock and application keybindings are preserved.
+Noctalia owns the wallpaper and notifications. The old swaybg service and forced
+Gruvbox GTK/Kvantum themes are no longer imported. Plasma, Dolphin and Kate are
+removed; Thunar, Mousepad, Papers and Loupe replace the KDE applications. Super+E
+opens Thunar; Super+Space and Super+X open Noctalia's launcher. KDE portal handling
+is replaced by the Hyprland/GTK portals. SDDM and Qt runtime libraries required by
+remaining applications are intentionally retained.
+
+The installer archives obsolete KDE/Kvantum settings under its private backup
+directory rather than deleting personal settings irreversibly. Hypridle and
+Hyprlock remain responsible for idle/suspend and locking.
+
 Noctalia autostarts both in plain Hyprland and in UWSM-managed sessions.
 
 ```sh
