@@ -17,6 +17,7 @@ tar -xzf "$backup/nixos.tar.gz" -C "$stage"
 files=(flake.nix flake.lock configuration.nix modules/programs.nix
   desktop/home.nix desktop/services.nix desktop/shell.nix
   desktop/theme/cursor.nix desktop/terminal/foot.nix
+  desktop/terminal/default.nix desktop/terminal/fastfetch.nix
   desktop/hyprland/default.nix desktop/hyprland/appearance.nix)
 for file in "${files[@]}"; do
   install -Dm644 "$repo/$file" "$stage/$file"
